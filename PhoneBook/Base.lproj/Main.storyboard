@@ -9,7 +9,7 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--View Controller-->
+        <!--Phone Book-->
         <scene sceneID="tne-QT-ifu">
             <objects>
                 <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="PhoneBook" customModuleProvider="target" sceneMemberID="viewController">
@@ -52,6 +52,7 @@
                                 </prototypes>
                                 <connections>
                                     <outlet property="dataSource" destination="BYZ-38-t0r" id="QaK-Sg-rXe"/>
+                                    <outlet property="delegate" destination="BYZ-38-t0r" id="Y6h-sr-WeD"/>
                                 </connections>
                             </tableView>
                         </subviews>
@@ -63,10 +64,10 @@
                             <constraint firstItem="N7p-dZ-8Hf" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" id="wdi-q9-w0k"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" id="rQP-al-fdd">
+                    <navigationItem key="navigationItem" title="Phone Book" id="rQP-al-fdd">
                         <barButtonItem key="rightBarButtonItem" title="Add" id="2wk-Un-Eye">
                             <connections>
-                                <action selector="doAdd:" destination="BYZ-38-t0r" id="Lfk-KD-FPX"/>
+                                <action selector="addContact:" destination="BYZ-38-t0r" id="NNp-sX-t5b"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
