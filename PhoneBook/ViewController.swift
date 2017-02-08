@@ -8,16 +8,14 @@
 
 import UIKit
 
-class ViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
+class ViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, ContactsSavable {
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
-        theContactsList.append(Contact(theName: "Jack Burns", theNumber: "1-514-819-5124"))
-    }
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+    func SaveAContact(theContact: Contact, theIndexOfTheContact: Int!) {
+        if let _ = theIndexOfTheContact {
+            self.theContactsList[theIndexOfTheContact] = theContact
+        } else {
+            self.theContactsList.append(theContact)
+        }
     }
     
     @IBOutlet weak var tableView: UITableView!
@@ -27,26 +25,26 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         }
     }
     
-    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        // Do any additional setup after loading the view, typically from a nib.
+        theContactsList.append(Contact(theName: "Jack Burns", theNumber: "1-514-819-5124"))
+        theContactsList.append(Contact(theName: "te", theNumber: "1-514-819-5124"))
+        theContactsList.append(Contact(theName: "User Test Validation", theNumber: "1-514-ABC-5124", theAddress: "John Abbot College Residence"))
+        theContactsList.append(Contact(theName: "Work", theNumber: "1-514-123-5124", thePhoneType: .Work))
+    }
+    override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
+        // Dispose of any resources that can be recreated.
+    }
 }
 
 // Function Validation
 extension ViewController {
-    //Validates if the string is a phone number or not
-    func validate(value: String) -> Bool {
-        let PHONE_REGEX = "^(?:\\+?1[-. ]?)?\\(?([0-9]{3})\\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$"
-        let phoneTest = NSPredicate(format: "SELF MATCHES %@", PHONE_REGEX)
-        let result =  phoneTest.evaluate(with: value)
-        return result
-    }
-    
-    func isValid(nameCount:Int, numberString:String)->Bool {
-        if ( nameCount >= 3) { 
-            if (validate(value: numberString)){
-                return true
-            }
-        }
-        return false
+    func isValid(nameString:String, numberString:String)->Bool {
+        let isContactValid = Contact(theName: nameString, theNumber: numberString)
+        return isContactValid.validateNameAndPhone()
+
     }
 }
 
@@ -54,9 +52,8 @@ extension ViewController {
 extension ViewController {
     func textFieldDidChange(textField:UITextField) {
         let theController = self.presentedViewController as? UIAlertController
-        let text1 = theController?.textFields?.first?.text
-        let text2 = theController?.textFields?.last?.text
-        theController?.actions.last?.isEnabled = isValid(nameCount: text1!.characters.count, numberString: text2!)
+        let isContactValid = Contact(theName: (theController?.textFields?.first?.text)!, theNumber: (theController?.textFields?.last?.text)!)
+        theController?.actions.last?.isEnabled = isContactValid.validateNameAndPhone()
     }
 }
 
@@ -124,6 +121,17 @@ extension ViewController {
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
             self.theContactsList.remove(at: indexPath.row)
+        }
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        let theNextViewController = segue.destination as! EditViewController
+        theNextViewController.objToSaveTo = self
+        if segue.identifier == "EditSegue" {
+            if let indexPath = self.tableView.indexPathsForSelectedRows?[0] {
+                theNextViewController.theContact = self.theContactsList[indexPath.row]
+                theNextViewController.indexOfContact = indexPath.row
+            }
         }
     }
 }
