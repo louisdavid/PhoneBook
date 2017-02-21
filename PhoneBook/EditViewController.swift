@@ -15,7 +15,9 @@ class EditViewController: UIViewController {
     @IBOutlet weak var thePhoneText: UITextField!
     @IBOutlet weak var theNameText: UITextField!
     @IBOutlet weak var thePhoneType: UISegmentedControl!
-    @IBOutlet weak var theSegmentedIndex: UISegmentedControl!
+    @IBOutlet weak var thePhoneSegmented: UISegmentedControl!
+    @IBOutlet weak var theGenderSegmented: UISegmentedControl!
+    @IBOutlet weak var theImageView: UIImageView!
     
     var objToSaveTo:ContactsSavable!
     var theContact:Contact!
@@ -24,26 +26,25 @@ class EditViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        // Do any additional setup after loading the view.
+        // Set Defaults
         self.SaveButton.isEnabled = self.theContact.validateNameAndPhone()
         self.thePhoneType.selectedSegmentIndex = 2
         self.theTextView.layer.borderWidth = 0.5
         self.theTextView.layer.borderColor = UIColor(red: 0.8, green: 0.8, blue: 0.8, alpha: 1.0).cgColor
         self.theTextView.layer.cornerRadius = 5.0
+        self.theImageView.backgroundColor = UIColor.lightGray
         
-        if let _ = self.indexOfContact {
-            self.theNameText.text = self.theContact.theName
-            self.thePhoneText.text = self.theContact.theNumber
-            self.theTextView.text = self.theContact.theAddress
-            self.theSegmentedIndex.selectedSegmentIndex = {
-                switch self.theContact.thePhoneType {
-                    case .Home: return 0
-                    case .Work: return 1
-                    case .Mobile: return 2
-                    case .Fax: return 3
-                }
-            }()
+        //Set Edit Contact Information screen
+        self.theNameText.text = self.theContact.theName
+        self.thePhoneText.text = self.theContact.theNumber
+        self.theTextView.text = self.theContact.theAddress
+        self.thePhoneSegmented.selectedSegmentIndex = self.theContact.phoneTypeAsInt
+        self.theGenderSegmented.selectedSegmentIndex = self.theContact.genderAsInt
+        if let name = self.theContact.theImageString {
+            self.theImageView.image = UIImage(named: name)
         }
+
+        //Add Event Handlers for the name and phone textfields
         self.thePhoneText.addTarget(self, action: #selector(textFieldDidChange(textField: )), for: .editingChanged)
         self.theNameText.addTarget(self, action: #selector(textFieldDidChange(textField: )), for: .editingChanged)
     }
@@ -62,15 +63,8 @@ extension EditViewController {
         self.theContact.theName = self.theNameText.text!
         self.theContact.theNumber = self.thePhoneText.text!
         self.theContact.theAddress = self.theTextView.text!
-        self.theContact.thePhoneType = {
-            switch self.theSegmentedIndex.selectedSegmentIndex {
-            case 0: return .Home
-            case 1: return .Work
-            case 2: return .Mobile
-            case 3: return .Fax
-            default: return .Mobile
-            }
-        }()
+        self.theContact.phoneTypeAsInt = self.thePhoneSegmented.selectedSegmentIndex
+        self.theContact.genderAsInt = self.theGenderSegmented.selectedSegmentIndex
         self.objToSaveTo.SaveAContact(theContact: self.theContact, theIndexOfTheContact: self.indexOfContact)
         dismiss(animated: true, completion: nil)
     }

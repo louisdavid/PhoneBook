@@ -28,10 +28,10 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
-        theContactsList.append(Contact(theName: "Jack Burns", theNumber: "1-514-819-5124"))
+        theContactsList.append(Contact(theName: "Jack Burns", theNumber: "1-514-819-5124", theGender: .Male))
         theContactsList.append(Contact(theName: "te", theNumber: "1-514-819-5124"))
         theContactsList.append(Contact(theName: "User Test Validation", theNumber: "1-514-ABC-5124", theAddress: "John Abbot College Residence"))
-        theContactsList.append(Contact(theName: "Work", theNumber: "1-514-123-5124", thePhoneType: .Work))
+        theContactsList.append(Contact(theName: "Work", theNumber: "1-514-123-5124", thePhoneType: .Work, theGender: .Female))
     }
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -88,8 +88,6 @@ extension ViewController {
         addAction.isEnabled = false
         
         //Add Handler to Alert
-       // let textField1 = addAlert.textFields?.first
-       // let textField2 = addAlert.textFields?.last
         addAlert.textFields?.first?.addTarget(self, action: #selector(textFieldDidChange(textField: )), for: .editingChanged)
         addAlert.textFields?.last?.addTarget(self, action: #selector(textFieldDidChange(textField: )), for: .editingChanged)
 
@@ -109,9 +107,17 @@ extension ViewController {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let theCell = self.tableView.dequeueReusableCell(withIdentifier: "TheCell", for: indexPath)
-        theCell.textLabel?.text = self.theContactsList[indexPath.row].theName
-        theCell.detailTextLabel?.text = self.theContactsList[indexPath.row].theNumber
+        //Set The Cell with the correct Prototype Cell
+        var theCell:UITableViewCell
+        if let _ =  self.theContactsList[indexPath.row].theImageString {
+            theCell = self.tableView.dequeueReusableCell(withIdentifier: "TheCellWithImage", for: indexPath)
+        }else {
+            theCell = self.tableView.dequeueReusableCell(withIdentifier: "TheCellWithNoImage", for: indexPath)
+        }
+        
+        theCell.textLabel?.text = self.theContactsList[indexPath.row].theNameAndGenderAsString
+        theCell.detailTextLabel?.text = self.theContactsList[indexPath.row].thePhoneNumberAndTypeAsString
+        
         return theCell
     }
 }
