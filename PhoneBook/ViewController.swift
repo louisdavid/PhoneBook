@@ -28,11 +28,9 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         
         do {
             for aContactEntity in try self.mangedContextObject.fetch(theFetchRequest) {
-                let aContact = Contact(theName: aContactEntity.theName!, theNumber: aContactEntity.theNumber!, theAddress: aContactEntity.theAddress!)
+                let aContact = Contact(theName: aContactEntity.theName!, theNumber: aContactEntity.theNumber!, theAddress: aContactEntity.theAddress!, theImageString: aContactEntity.theImageString!, theNSManagedObject: aContactEntity)
                 aContact.createdDateTime = aContactEntity.createdDateTime as! Date
-                aContact.theImageString = aContactEntity.theImageString!
-                aContact.theAddress = aContactEntity.theAddress!
-                
+
                 switch aContactEntity.theGender! {
                     case "Other": aContact.theGender = .Other
                     case "Male": aContact.theGender = .Male
@@ -46,7 +44,7 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
                     case "Fax": aContact.thePhoneType = .Fax
                     default: aContact.thePhoneType = .Mobile
                 }
-                
+                aContact.theNSManagedObject = aContactEntity
                 self.theContactsList.append(aContact)
             }
         } catch {
@@ -66,24 +64,10 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
     override func viewDidLoad() {
         super.viewDidLoad()
         loadContactFromCoreData()
-        // Do any additional setup after loading the view, typically from a nib.
-        //theContactsList.append(Contact(theName: "Jack Burns", theNumber: "1-514-819-5124", theGender: .Male, theImageString: "1"))
-        //theContactsList.append(Contact(theName: "te", theNumber: "1-514-819-5124"))
-        //theContactsList.append(Contact(theName: "User Test Validation", theNumber: "1-514-ABC-5124", theAddress: "John Abbot College Residence"))
-        //theContactsList.append(Contact(theName: "Work", theNumber: "1-514-123-5124", thePhoneType: .Work, theGender: .Female))
     }
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
-    }
-}
-
-// Function Validation
-extension ViewController {
-    func isValid(nameString:String, numberString:String)->Bool {
-        let isContactValid = Contact(theName: nameString, theNumber: numberString)
-        return isContactValid.validateNameAndPhone()
-
     }
 }
 
@@ -149,6 +133,7 @@ extension ViewController {
         theContactEntity.theGender = self.theContactsList.last?.genderAsString
         theContactEntity.thePhoneType = self.theContactsList.last?.phoneTypeAsString
         theContactEntity.theImageString = self.theContactsList.last?.theImageString
+        self.theContactsList.last?.theNSManagedObject = theContactEntity
         
         do {
             try self.mangedContextObject.save()
@@ -201,6 +186,12 @@ extension ViewController {
 extension ViewController {
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
+            do {
+                self.mangedContextObject.delete(self.theContactsList[indexPath.row].theNSManagedObject)
+                try self.mangedContextObject.save()
+            } catch {
+                print("Could not delete... Error = \(error.localizedDescription)")
+            }
             self.theContactsList.remove(at: indexPath.row)
         }
     }

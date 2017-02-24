@@ -10,6 +10,6 @@
         <attribute name="thePhoneType" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
     <elements>
-        <element name="ContactEntity" positionX="-63" positionY="-18" width="128" height="148"/>
+        <element name="ContactEntity" positionX="-63" positionY="-18" width="128" height="150"/>
     </elements>
 </model>

@@ -11,8 +11,8 @@
 		3FB5816A1E5F751C0035D8CC /* TableViewCellWithIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FB581691E5F751C0035D8CC /* TableViewCellWithIcon.swift */; };
 		3FB5816C1E5F7B9C0035D8CC /* CollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FB5816B1E5F7B9C0035D8CC /* CollectionViewCell.swift */; };
 		3FB581721E5F95F20035D8CC /* ImageStringSavable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FB581711E5F95F20035D8CC /* ImageStringSavable.swift */; };
-		3FB581751E5FAFEA0035D8CC /* Contact.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 3FB581731E5FAFEA0035D8CC /* Contact.xcdatamodeld */; };
 		6D0359771E49305A00E3F747 /* Contact.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D0359761E49305A00E3F747 /* Contact.swift */; };
+		6D368F8F1E60CE00008E3B94 /* Contact.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 6D368F8D1E60CE00008E3B94 /* Contact.xcdatamodeld */; };
 		6D482DD41E4A8AA40052C42D /* EditViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D482DD31E4A8AA40052C42D /* EditViewController.swift */; };
 		6D482DD61E4A9B720052C42D /* ContactsSavable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D482DD51E4A9B720052C42D /* ContactsSavable.swift */; };
 		6D482DD81E4A9D9D0052C42D /* PhoneType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D482DD71E4A9D9D0052C42D /* PhoneType.swift */; };
@@ -30,8 +30,8 @@
 		3FB581691E5F751C0035D8CC /* TableViewCellWithIcon.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TableViewCellWithIcon.swift; sourceTree = "<group>"; };
 		3FB5816B1E5F7B9C0035D8CC /* CollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CollectionViewCell.swift; sourceTree = "<group>"; };
 		3FB581711E5F95F20035D8CC /* ImageStringSavable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageStringSavable.swift; sourceTree = "<group>"; };
-		3FB581741E5FAFEA0035D8CC /* Contact.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Contact.xcdatamodel; sourceTree = "<group>"; };
 		6D0359761E49305A00E3F747 /* Contact.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Contact.swift; sourceTree = "<group>"; };
+		6D368F8E1E60CE00008E3B94 /* Contact.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Contact.xcdatamodel; sourceTree = "<group>"; };
 		6D482DD31E4A8AA40052C42D /* EditViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditViewController.swift; sourceTree = "<group>"; };
 		6D482DD51E4A9B720052C42D /* ContactsSavable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContactsSavable.swift; sourceTree = "<group>"; };
 		6D482DD71E4A9D9D0052C42D /* PhoneType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhoneType.swift; sourceTree = "<group>"; };
@@ -131,8 +131,8 @@
 				6D5188BD1E49023900984BD1 /* AppDelegate.swift */,
 				6D5188C41E49023900984BD1 /* Assets.xcassets */,
 				6D5188C61E49023900984BD1 /* LaunchScreen.storyboard */,
+				6D368F8D1E60CE00008E3B94 /* Contact.xcdatamodeld */,
 				6D5188C91E49023900984BD1 /* Info.plist */,
-				3FB581731E5FAFEA0035D8CC /* Contact.xcdatamodeld */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -210,7 +210,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				3FB581721E5F95F20035D8CC /* ImageStringSavable.swift in Sources */,
-				3FB581751E5FAFEA0035D8CC /* Contact.xcdatamodeld in Sources */,
+				6D368F8F1E60CE00008E3B94 /* Contact.xcdatamodeld in Sources */,
 				3FB5816A1E5F751C0035D8CC /* TableViewCellWithIcon.swift in Sources */,
 				6D482DD41E4A8AA40052C42D /* EditViewController.swift in Sources */,
 				6D0359771E49305A00E3F747 /* Contact.swift in Sources */,
@@ -388,12 +388,12 @@
 /* End XCConfigurationList section */
 
 /* Begin XCVersionGroup section */
-		3FB581731E5FAFEA0035D8CC /* Contact.xcdatamodeld */ = {
+		6D368F8D1E60CE00008E3B94 /* Contact.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
-				3FB581741E5FAFEA0035D8CC /* Contact.xcdatamodel */,
+				6D368F8E1E60CE00008E3B94 /* Contact.xcdatamodel */,
 			);
-			currentVersion = 3FB581741E5FAFEA0035D8CC /* Contact.xcdatamodel */;
+			currentVersion = 6D368F8E1E60CE00008E3B94 /* Contact.xcdatamodel */;
 			path = Contact.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;

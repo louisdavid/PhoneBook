@@ -10,6 +10,13 @@ import Foundation
 import CoreData
 
 class Contact {
+    static var nextUID:Int16 = 1
+    static func generateUid() -> Int16 {
+        nextUID = nextUID + 1
+        return nextUID
+    }
+    
+    let uniqueID:Int16
     var theName:String
     var theNumber:String
     var createdDateTime:Date //For future information on the contact
@@ -17,7 +24,7 @@ class Contact {
     var thePhoneType:PhoneType
     var theGender:Gender
     var theImageString:String!
-    //var NSManagedObject:ContactEntity
+    var theNSManagedObject:ContactEntity
     
     var phoneTypeAsInt:Int {
         get {
@@ -90,7 +97,8 @@ class Contact {
         }
     }
     
-    init (theName:String, theNumber:String, theAddress:String="", thePhoneType:PhoneType = .Mobile, theGender:Gender = .Other, theImageString:String=""){
+    init (theName:String, theNumber:String, theAddress:String="", thePhoneType:PhoneType = .Mobile, theGender:Gender = .Other, theImageString:String="", theNSManagedObject:ContactEntity){
+        self.uniqueID = Contact.generateUid()
         self.theName = theName
         self.theNumber = theNumber
         self.createdDateTime = Date()
@@ -98,9 +106,19 @@ class Contact {
         self.thePhoneType = thePhoneType
         self.theGender = theGender
         self.theImageString = theImageString
-        //self.NSManagedObject = NSManagedObject
+        self.theNSManagedObject = theNSManagedObject
     }
-    
+    init (theName:String, theNumber:String, theAddress:String="", thePhoneType:PhoneType = .Mobile, theGender:Gender = .Other, theImageString:String=""){
+        self.uniqueID = Contact.generateUid()
+        self.theName = theName
+        self.theNumber = theNumber
+        self.createdDateTime = Date()
+        self.theAddress = theAddress
+        self.thePhoneType = thePhoneType
+        self.theGender = theGender
+        self.theImageString = theImageString
+        self.theNSManagedObject = ContactEntity()
+    }
     
     func validatePhoneNumber() -> Bool {
         let PHONE_REGEX = "^(?:\\+?1[-. ]?)?\\(?([0-9]{3})\\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$"
