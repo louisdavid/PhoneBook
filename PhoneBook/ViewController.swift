@@ -19,6 +19,7 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         } else {
             self.theContactsList.append(theContact)
         }
+        self.saveCD()
     }
     
     //Load CoreData
@@ -119,22 +120,7 @@ extension ViewController {
             }
             //add to the list of contacts
             self.theContactsList.append(Contact(theName: theName, theNumber: theNumber))
-            
-            let theContactEntity = ContactEntity(context: self.mangedContextObject)
-            
-            theContactEntity.theName = self.theContactsList.last?.theName
-            theContactEntity.createdDateTime = self.theContactsList.last?.createdDateTime as NSDate?
-            theContactEntity.theNumber = self.theContactsList.last?.theNumber
-            theContactEntity.theAddress = self.theContactsList.last?.theAddress
-            theContactEntity.theGender = self.theContactsList.last?.genderAsString
-            theContactEntity.thePhoneType = self.theContactsList.last?.phoneTypeAsString
-            theContactEntity.theImageString = self.theContactsList.last?.theImageString
-            
-            do {
-                try self.mangedContextObject.save()
-            } catch {
-                print("Error saving a Contact to CoreData - \(error.localizedDescription)")
-            }
+            self.saveCD()
             
         })
         addAlert.addAction(addAction)
@@ -150,6 +136,30 @@ extension ViewController {
         present(addAlert, animated: true, completion: nil)
     }
 }
+
+//Save Contact To CoreData
+extension ViewController {
+    func saveCD() {
+        let theContactEntity = ContactEntity(context: self.mangedContextObject)
+        
+        theContactEntity.theName = self.theContactsList.last?.theName
+        theContactEntity.createdDateTime = self.theContactsList.last?.createdDateTime as NSDate?
+        theContactEntity.theNumber = self.theContactsList.last?.theNumber
+        theContactEntity.theAddress = self.theContactsList.last?.theAddress
+        theContactEntity.theGender = self.theContactsList.last?.genderAsString
+        theContactEntity.thePhoneType = self.theContactsList.last?.phoneTypeAsString
+        theContactEntity.theImageString = self.theContactsList.last?.theImageString
+        
+        do {
+            try self.mangedContextObject.save()
+        } catch {
+            print("Error saving a Contact to CoreData - \(error.localizedDescription)")
+        }
+    }
+}
+
+
+
 
 // DataSource Methods
 extension ViewController {
