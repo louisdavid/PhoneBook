@@ -10,13 +10,7 @@ import Foundation
 import CoreData
 
 class Contact {
-    static var nextUID:Int16 = 1
-    static func generateUid() -> Int16 {
-        nextUID = nextUID + 1
-        return nextUID
-    }
-    
-    let uniqueID:Int16
+
     var theName:String
     var theNumber:String
     var createdDateTime:Date //For future information on the contact
@@ -98,7 +92,6 @@ class Contact {
     }
     
     init (theName:String, theNumber:String, theAddress:String="", thePhoneType:PhoneType = .Mobile, theGender:Gender = .Other, theImageString:String="", theNSManagedObject:ContactEntity){
-        self.uniqueID = Contact.generateUid()
         self.theName = theName
         self.theNumber = theNumber
         self.createdDateTime = Date()
@@ -109,7 +102,6 @@ class Contact {
         self.theNSManagedObject = theNSManagedObject
     }
     init (theName:String, theNumber:String, theAddress:String="", thePhoneType:PhoneType = .Mobile, theGender:Gender = .Other, theImageString:String=""){
-        self.uniqueID = Contact.generateUid()
         self.theName = theName
         self.theNumber = theNumber
         self.createdDateTime = Date()

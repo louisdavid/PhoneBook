@@ -15,11 +15,13 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
     
     func SaveAContact(theContact: Contact, theIndexOfTheContact: Int!) {
         if let _ = theIndexOfTheContact {
+            self.mangedContextObject.delete(theContact.theNSManagedObject)
             self.theContactsList[theIndexOfTheContact] = theContact
         } else {
             self.theContactsList.append(theContact)
         }
-        self.saveCD()
+        
+        self.saveCD(index: theIndexOfTheContact)
     }
     
     //Load CoreData
@@ -29,8 +31,8 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         do {
             for aContactEntity in try self.mangedContextObject.fetch(theFetchRequest) {
                 let aContact = Contact(theName: aContactEntity.theName!, theNumber: aContactEntity.theNumber!, theAddress: aContactEntity.theAddress!, theImageString: aContactEntity.theImageString!, theNSManagedObject: aContactEntity)
+                
                 aContact.createdDateTime = aContactEntity.createdDateTime as! Date
-
                 switch aContactEntity.theGender! {
                     case "Other": aContact.theGender = .Other
                     case "Male": aContact.theGender = .Male
@@ -45,6 +47,7 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
                     default: aContact.thePhoneType = .Mobile
                 }
                 aContact.theNSManagedObject = aContactEntity
+                
                 self.theContactsList.append(aContact)
             }
         } catch {
@@ -104,7 +107,7 @@ extension ViewController {
             }
             //add to the list of contacts
             self.theContactsList.append(Contact(theName: theName, theNumber: theNumber))
-            self.saveCD()
+            self.saveCD(index: self.theContactsList.count - 1)
             
         })
         addAlert.addAction(addAction)
@@ -123,17 +126,17 @@ extension ViewController {
 
 //Save Contact To CoreData
 extension ViewController {
-    func saveCD() {
+    func saveCD(index:Int) {
         let theContactEntity = ContactEntity(context: self.mangedContextObject)
         
-        theContactEntity.theName = self.theContactsList.last?.theName
-        theContactEntity.createdDateTime = self.theContactsList.last?.createdDateTime as NSDate?
-        theContactEntity.theNumber = self.theContactsList.last?.theNumber
-        theContactEntity.theAddress = self.theContactsList.last?.theAddress
-        theContactEntity.theGender = self.theContactsList.last?.genderAsString
-        theContactEntity.thePhoneType = self.theContactsList.last?.phoneTypeAsString
-        theContactEntity.theImageString = self.theContactsList.last?.theImageString
-        self.theContactsList.last?.theNSManagedObject = theContactEntity
+        theContactEntity.theName = self.theContactsList[index].theName
+        theContactEntity.createdDateTime = self.theContactsList[index].createdDateTime as NSDate?
+        theContactEntity.theNumber = self.theContactsList[index].theNumber
+        theContactEntity.theAddress = self.theContactsList[index].theAddress
+        theContactEntity.theGender = self.theContactsList[index].genderAsString
+        theContactEntity.thePhoneType = self.theContactsList[index].phoneTypeAsString
+        theContactEntity.theImageString = self.theContactsList[index].theImageString
+        self.theContactsList[index].theNSManagedObject = theContactEntity
         
         do {
             try self.mangedContextObject.save()
