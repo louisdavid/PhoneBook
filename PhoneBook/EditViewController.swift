@@ -8,7 +8,18 @@
 
 import UIKit
 
-class EditViewController: UIViewController {
+class EditViewController: UIViewController, ImageStringSavable {
+    
+    func SaveAnImageString(theImageString:String) {
+        self.theImageString = theImageString
+        if let _ = UIImage(named: theImageString){
+            self.theImageView.image = UIImage(named: theImageString)
+            self.theImageView.backgroundColor = UIColor.white
+        } else {
+            self.theImageView.backgroundColor = UIColor.lightGray
+            self.theImageView.image = nil
+        }
+    }
     
     @IBOutlet weak var SaveButton: UIButton!
     @IBOutlet weak var theTextView: UITextView!
@@ -19,6 +30,7 @@ class EditViewController: UIViewController {
     @IBOutlet weak var theGenderSegmented: UISegmentedControl!
     @IBOutlet weak var theImageView: UIImageView!
     
+    var theImageString:String = ""
     var objToSaveTo:ContactsSavable!
     var theContact:Contact!
     var indexOfContact:Int!
@@ -32,7 +44,6 @@ class EditViewController: UIViewController {
         self.theTextView.layer.borderWidth = 0.5
         self.theTextView.layer.borderColor = UIColor(red: 0.8, green: 0.8, blue: 0.8, alpha: 1.0).cgColor
         self.theTextView.layer.cornerRadius = 5.0
-        self.theImageView.backgroundColor = UIColor.lightGray
         
         //Set Edit Contact Information screen
         self.theNameText.text = self.theContact.theName
@@ -40,13 +51,17 @@ class EditViewController: UIViewController {
         self.theTextView.text = self.theContact.theAddress
         self.thePhoneSegmented.selectedSegmentIndex = self.theContact.phoneTypeAsInt
         self.theGenderSegmented.selectedSegmentIndex = self.theContact.genderAsInt
-        if let name = self.theContact.theImageString {
-            self.theImageView.image = UIImage(named: name)
+        if let _ = UIImage(named: self.theContact.theImageString) {
+            self.theImageView.image = UIImage(named: self.theContact.theImageString)
+            self.theImageString = self.theContact.theImageString
+        } else {
+            self.theImageView.backgroundColor = UIColor.lightGray
         }
 
         //Add Event Handlers for the name and phone textfields
         self.thePhoneText.addTarget(self, action: #selector(textFieldDidChange(textField: )), for: .editingChanged)
         self.theNameText.addTarget(self, action: #selector(textFieldDidChange(textField: )), for: .editingChanged)
+        self.theGenderSegmented.addTarget(self, action: #selector(genderDidChange(segmentedControl:)), for: .valueChanged)
     }
 
     override func didReceiveMemoryWarning() {
@@ -65,6 +80,7 @@ extension EditViewController {
         self.theContact.theAddress = self.theTextView.text!
         self.theContact.phoneTypeAsInt = self.thePhoneSegmented.selectedSegmentIndex
         self.theContact.genderAsInt = self.theGenderSegmented.selectedSegmentIndex
+        self.theContact.theImageString = self.theImageString
         self.objToSaveTo.SaveAContact(theContact: self.theContact, theIndexOfTheContact: self.indexOfContact)
         dismiss(animated: true, completion: nil)
     }
@@ -78,5 +94,22 @@ extension EditViewController {
     func textFieldDidChange(textField:UITextField) {
         let isContactValid = Contact(theName: self.theNameText.text!, theNumber: self.thePhoneText.text!)
         self.SaveButton.isEnabled = isContactValid.validateNameAndPhone()
+    }
+    func genderDidChange(segmentedControl:UISegmentedControl) {
+        self.theImageString = ""
+        self.theImageView.image = nil
+        self.theImageView.backgroundColor = UIColor.lightGray
+    }
+}
+
+//Delegate Methods
+extension EditViewController {
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        let theNextViewController = segue.destination as! CollectionViewController
+
+        if segue.identifier == "ImageSegue" {
+            theNextViewController.theIndexOfImage = self.theGenderSegmented.selectedSegmentIndex
+            theNextViewController.objToSaveTo = self
+        }
     }
 }

@@ -7,15 +7,17 @@
 //
 
 import Foundation
+import CoreData
 
 class Contact {
     var theName:String
     var theNumber:String
-    let createdDateTime:Date //For future information on the contact
+    var createdDateTime:Date //For future information on the contact
     var theAddress:String!
     var thePhoneType:PhoneType
     var theGender:Gender
     var theImageString:String!
+    //var NSManagedObject:ContactEntity
     
     var phoneTypeAsInt:Int {
         get {
@@ -88,7 +90,7 @@ class Contact {
         }
     }
     
-    init (theName:String, theNumber:String, theAddress:String="", thePhoneType:PhoneType = .Mobile, theGender:Gender = .Other, theImageString:String?=nil){
+    init (theName:String, theNumber:String, theAddress:String="", thePhoneType:PhoneType = .Mobile, theGender:Gender = .Other, theImageString:String=""){
         self.theName = theName
         self.theNumber = theNumber
         self.createdDateTime = Date()
@@ -96,6 +98,7 @@ class Contact {
         self.thePhoneType = thePhoneType
         self.theGender = theGender
         self.theImageString = theImageString
+        //self.NSManagedObject = NSManagedObject
     }
     
     

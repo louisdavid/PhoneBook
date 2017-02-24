@@ -1,5 +1,5 @@
 //
-//  CollectionViewCell.swift
+//  TableViewCellWithIcon.swift
 //  PhoneBook
 //
 //  Created by student on 2017-02-23.
@@ -8,7 +8,9 @@
 
 import UIKit
 
-class CollectionViewCell: UICollectionViewCell {
-    
+class TableViewCellWithIcon: UITableViewCell {
+
     @IBOutlet var theImageView: UIImageView!
+    @IBOutlet var theTitle: UILabel!
+    @IBOutlet var theSubtitle: UILabel!
 }

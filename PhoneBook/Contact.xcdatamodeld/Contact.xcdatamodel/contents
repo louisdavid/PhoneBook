@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="11759" systemVersion="15G1212" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+    <entity name="ContactEntity" representedClassName="ContactEntity" syncable="YES" codeGenerationType="class">
+        <attribute name="createdDateTime" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="theAddress" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="theGender" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="theImageString" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="theName" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="theNumber" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="thePhoneType" optional="YES" attributeType="String" syncable="YES"/>
+    </entity>
+    <elements>
+        <element name="ContactEntity" positionX="-63" positionY="-18" width="128" height="148"/>
+    </elements>
+</model>

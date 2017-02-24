@@ -7,8 +7,11 @@
 //
 
 import UIKit
+import CoreData
 
 class ViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, ContactsSavable {
+    
+    var mangedContextObject = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     
     func SaveAContact(theContact: Contact, theIndexOfTheContact: Int!) {
         if let _ = theIndexOfTheContact {
@@ -18,6 +21,39 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         }
     }
     
+    //Load CoreData
+    func loadContactFromCoreData() {
+        let theFetchRequest:NSFetchRequest<ContactEntity> = ContactEntity.fetchRequest()
+        
+        do {
+            for aContactEntity in try self.mangedContextObject.fetch(theFetchRequest) {
+                let aContact = Contact(theName: aContactEntity.theName!, theNumber: aContactEntity.theNumber!, theAddress: aContactEntity.theAddress!)
+                aContact.createdDateTime = aContactEntity.createdDateTime as! Date
+                aContact.theImageString = aContactEntity.theImageString!
+                aContact.theAddress = aContactEntity.theAddress!
+                
+                switch aContactEntity.theGender! {
+                    case "Other": aContact.theGender = .Other
+                    case "Male": aContact.theGender = .Male
+                    case "Female": aContact.theGender = .Female
+                    default: aContact.theGender = .Other
+                }
+                switch aContactEntity.thePhoneType! {
+                    case "Home": aContact.thePhoneType = .Home
+                    case "Work": aContact.thePhoneType = .Work
+                    case "Mobile": aContact.thePhoneType = .Mobile
+                    case "Fax": aContact.thePhoneType = .Fax
+                    default: aContact.thePhoneType = .Mobile
+                }
+                
+                self.theContactsList.append(aContact)
+            }
+        } catch {
+            print("Error loading a Contact Entity from CoreData - \(error.localizedDescription)")
+        }
+    
+    }
+    
     @IBOutlet weak var tableView: UITableView!
     var theContactsList = [Contact]() {
         didSet {
@@ -25,13 +61,15 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         }
     }
     
+
     override func viewDidLoad() {
         super.viewDidLoad()
+        loadContactFromCoreData()
         // Do any additional setup after loading the view, typically from a nib.
-        theContactsList.append(Contact(theName: "Jack Burns", theNumber: "1-514-819-5124", theGender: .Male))
-        theContactsList.append(Contact(theName: "te", theNumber: "1-514-819-5124"))
-        theContactsList.append(Contact(theName: "User Test Validation", theNumber: "1-514-ABC-5124", theAddress: "John Abbot College Residence"))
-        theContactsList.append(Contact(theName: "Work", theNumber: "1-514-123-5124", thePhoneType: .Work, theGender: .Female))
+        //theContactsList.append(Contact(theName: "Jack Burns", theNumber: "1-514-819-5124", theGender: .Male, theImageString: "1"))
+        //theContactsList.append(Contact(theName: "te", theNumber: "1-514-819-5124"))
+        //theContactsList.append(Contact(theName: "User Test Validation", theNumber: "1-514-ABC-5124", theAddress: "John Abbot College Residence"))
+        //theContactsList.append(Contact(theName: "Work", theNumber: "1-514-123-5124", thePhoneType: .Work, theGender: .Female))
     }
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -81,6 +119,23 @@ extension ViewController {
             }
             //add to the list of contacts
             self.theContactsList.append(Contact(theName: theName, theNumber: theNumber))
+            
+            let theContactEntity = ContactEntity(context: self.mangedContextObject)
+            
+            theContactEntity.theName = self.theContactsList.last?.theName
+            theContactEntity.createdDateTime = self.theContactsList.last?.createdDateTime as NSDate?
+            theContactEntity.theNumber = self.theContactsList.last?.theNumber
+            theContactEntity.theAddress = self.theContactsList.last?.theAddress
+            theContactEntity.theGender = self.theContactsList.last?.genderAsString
+            theContactEntity.thePhoneType = self.theContactsList.last?.phoneTypeAsString
+            theContactEntity.theImageString = self.theContactsList.last?.theImageString
+            
+            do {
+                try self.mangedContextObject.save()
+            } catch {
+                print("Error saving a Contact to CoreData - \(error.localizedDescription)")
+            }
+            
         })
         addAlert.addAction(addAction)
         
@@ -106,19 +161,29 @@ extension ViewController {
         return self.theContactsList.count
     }
     
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        //Set The Cell with the correct Prototype Cell
-        var theCell:UITableViewCell
-        if let _ =  self.theContactsList[indexPath.row].theImageString {
-            theCell = self.tableView.dequeueReusableCell(withIdentifier: "TheCellWithImage", for: indexPath)
-        }else {
-            theCell = self.tableView.dequeueReusableCell(withIdentifier: "TheCellWithNoImage", for: indexPath)
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        if let _ = UIImage(named: self.theContactsList[indexPath.row].theImageString) {
+            return 100.0
+        } else {
+            return 50.0
         }
-        
-        theCell.textLabel?.text = self.theContactsList[indexPath.row].theNameAndGenderAsString
-        theCell.detailTextLabel?.text = self.theContactsList[indexPath.row].thePhoneNumberAndTypeAsString
-        
-        return theCell
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+
+        //Set The Cell with the correct Prototype Cell
+        if let _ =  UIImage(named: self.theContactsList[indexPath.row].theImageString) {
+            let theCell = self.tableView.dequeueReusableCell(withIdentifier: "theCellWithImage", for: indexPath) as! TableViewCellWithIcon
+            theCell.theImageView.image = UIImage(named: self.theContactsList[indexPath.row].theImageString)
+            theCell.theTitle.text = self.theContactsList[indexPath.row].theNameAndGenderAsString
+            theCell.theSubtitle.text = self.theContactsList[indexPath.row].thePhoneNumberAndTypeAsString
+            return theCell
+        }else {
+            let theCell = self.tableView.dequeueReusableCell(withIdentifier: "theCellWithNoImage", for: indexPath) as! TableViewCellWithoutIcon
+            theCell.theTitle.text = self.theContactsList[indexPath.row].theNameAndGenderAsString
+            theCell.theSubtitle.text = self.theContactsList[indexPath.row].thePhoneNumberAndTypeAsString
+            return theCell
+        }
     }
 }
 
